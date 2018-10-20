@@ -1,4 +1,14 @@
 <!DOCTYPE html>
+<head>
+    <title>ebit</title>
+    <style>
+        body{text-align:center;}
+        #btn-start{text-align:center;}
+    </style>
+</head>
+<body>
+    <button id="btn-start">start</button>
+</body>
 <script src="wasm_exec.js"></script>
 <script src="camera.js"></script>
 <script>
@@ -16,9 +26,21 @@
         go.run(result.instance);
     })();
 
+    const main = () => {
+        console.log('main');
+        btn = document.getElementById("btn-start");
+        console.log(btn);
+        btn.onclick = handleBtnStartClick;
+    }
 
-    /////
-    (function () {
+    const handleBtnStartClick = ({target}) => {
+        console.log('handleBtnStartClick');
+        target.style.display = "none";
+        startCamming();
+    }
+
+    const startCamming = () => {
+        console.log('startCamming');
         camera.init({
             // downscale video for performance reasons
             width: 320,
@@ -62,6 +84,7 @@
                 // document.getElementById("cameraNotSupported").style.display = "block";
             }
         });
-    })();
+    }
 
+    main();
 </script>
