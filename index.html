@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<script src="wasm_exec.js"></script>
+<script src="camera.js"></script>
+<script>
+    (async () => {
+        const resp = await fetch('main.wasm');
+        if (!resp.ok) {
+            const pre = document.createElement('pre');
+            pre.innerText = await resp.text();
+            document.body.appendChild(pre);
+            return;
+        }
+        const src = await resp.arrayBuffer();
+        const go = new Go();
+        const result = await WebAssembly.instantiate(src, go.importObject);
+        go.run(result.instance);
+    })();
+
+
+    /////
+    (function () {
+        camera.init({
+            // downscale video for performance reasons
+            width: 320,
+            height: 240,
+
+            fps: 60,
+            mirror: true,
+
+            onFrame: function (canvas) {
+                // var context = canvas.getContext("2d");
+                // var canvasWidth = canvas.width;
+                // var canvasHeight = canvas.height;
+                //
+                // get webcam image data
+                // var currentData = context.getImageData(0, 0, canvasWidth, canvasHeight);
+                sendFrame(canvas.toDataURL())
+            },
+
+            onSuccess: function () {
+                // document.getElementById("info").style.display = "none";
+                //
+                // try {
+                //     heatmap = createWebGLHeatmap({
+                //         canvas: video
+                //     });
+                // } catch (exception) {
+                //     // webgl not supported
+                //     camera.stop();
+                //     video.style.display = "none";
+                //     document.getElementById("webGLNotSupported").style.display = "block";
+                // }
+            },
+
+            onError: function (error) {
+                // TODO: log error
+            },
+
+            onNotSupported: function () {
+                // document.getElementById("info").style.display = "none";
+                // video.style.display = "none";
+                // document.getElementById("cameraNotSupported").style.display = "block";
+            }
+        });
+    })();
+
+</script>
