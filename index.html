@@ -1,17 +1,23 @@
 <!DOCTYPE html>
 <head>
-    <title>ebit</title>
+    <title>Peepers</title>
     <style>
-        body{text-align:center;}
-        #btn-start{text-align:center;}
+        body {
+            text-align: center;
+        }
+
+        #btn-start {
+            text-align: center;
+        }
     </style>
 </head>
 <body>
-    <button id="btn-start">start</button>
+<button id="btn-start">start</button>
 </body>
 <script src="wasm_exec.js"></script>
 <script src="camera.js"></script>
 <script>
+    // wasm
     (async () => {
         const resp = await fetch('main.wasm');
         if (!resp.ok) {
@@ -26,6 +32,7 @@
         go.run(result.instance);
     })();
 
+    // button
     const main = () => {
         console.log('main');
         btn = document.getElementById("btn-start");
@@ -39,50 +46,20 @@
         startCamming();
     }
 
+    // capturing
     const startCamming = () => {
-        console.log('startCamming');
+        console.log('start capturing');
         camera.init({
-            // downscale video for performance reasons
             width: 320,
             height: 240,
 
-            fps: 60,
+            fps: 30,
             mirror: true,
 
             onFrame: function (canvas) {
-                // var context = canvas.getContext("2d");
-                // var canvasWidth = canvas.width;
-                // var canvasHeight = canvas.height;
-                //
-                // get webcam image data
-                // var currentData = context.getImageData(0, 0, canvasWidth, canvasHeight);
                 sendFrame(canvas.toDataURL())
-            },
-
-            onSuccess: function () {
-                // document.getElementById("info").style.display = "none";
-                //
-                // try {
-                //     heatmap = createWebGLHeatmap({
-                //         canvas: video
-                //     });
-                // } catch (exception) {
-                //     // webgl not supported
-                //     camera.stop();
-                //     video.style.display = "none";
-                //     document.getElementById("webGLNotSupported").style.display = "block";
-                // }
-            },
-
-            onError: function (error) {
-                // TODO: log error
-            },
-
-            onNotSupported: function () {
-                // document.getElementById("info").style.display = "none";
-                // video.style.display = "none";
-                // document.getElementById("cameraNotSupported").style.display = "block";
             }
+
         });
     }
 
